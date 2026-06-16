@@ -4,7 +4,7 @@ export const siteConfig = {
   tagline: "Premium Flooring, Curated for Your Home.",
   description:
     "Shop premium LVP and engineered hardwood flooring online. Visualize, compare, order samples and buy with confidence from Senior Floors.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://studio.senior-floors.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://showroom.senior-floors.com",
   mainSiteUrl: "https://senior-floors.com",
   phone: process.env.NEXT_PUBLIC_PHONE ?? "(720) 751-9813",
   phoneTel: "+17207519813",
