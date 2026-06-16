@@ -12,7 +12,12 @@ function slugify(name: string): string {
 }
 
 function toPrice(displayPrice: number, type: ProductType): number {
-  const divisor = type === ProductType.LVP ? 20 : 25;
+  const divisor =
+    type === ProductType.LVP
+      ? 20
+      : type === ProductType.ENGINEERED
+        ? 25
+        : 22;
   return Math.round((displayPrice / divisor) * 100) / 100;
 }
 
@@ -307,6 +312,153 @@ const products = [
     description:
       "Trending smoke grey LVP with balanced warm undertones. A versatile neutral that pairs with both modern and transitional interiors.",
   },
+  // Generic demo products for end-to-end testing
+  {
+    name: "Demo Classic Oak",
+    series: "Demo Collection",
+    type: ProductType.LVP,
+    colorFamily: "light-oak",
+    style: ["modern", "contemporary"],
+    rooms: ["living-room", "kitchen", "office"],
+    thickness: "8mm",
+    wearLayer: "20 mil",
+    width: '7"',
+    length: '48"',
+    finish: "Matte",
+    installType: "click-lock",
+    warranty: "25 Year",
+    waterproof: true,
+    petFriendly: true,
+    displayPrice: 69,
+    compareAtPrice: 79,
+    stockSqFt: 5000,
+    boxCoverageSqFt: 23.8,
+    hexPrimary: "#C8B090",
+    hexSecondary: "#B89A78",
+    description:
+      "Generic light oak LVP for cart, checkout, compare and sample flows. Waterproof click-lock plank with everyday durability.",
+  },
+  {
+    name: "Demo Waterproof Grey",
+    series: "Demo Collection",
+    type: ProductType.LVP,
+    colorFamily: "natural",
+    style: ["modern", "scandinavian"],
+    rooms: ["kitchen", "basement", "office"],
+    thickness: "6mm",
+    wearLayer: "12 mil",
+    width: '6"',
+    length: '48"',
+    finish: "Matte",
+    installType: "click-lock",
+    warranty: "25 Year",
+    waterproof: true,
+    petFriendly: true,
+    displayPrice: 59,
+    stockSqFt: 8000,
+    boxCoverageSqFt: 20.1,
+    hexPrimary: "#A8A090",
+    hexSecondary: "#989080",
+    description:
+      "Generic grey waterproof LVP ideal for basement and kitchen filter pages. Budget-friendly option for calculator and quantity tests.",
+  },
+  {
+    name: "Demo Engineered Maple",
+    series: "Demo Collection",
+    type: ProductType.ENGINEERED,
+    colorFamily: "natural",
+    style: ["contemporary", "farmhouse"],
+    rooms: ["bedroom", "living-room"],
+    thickness: "14mm",
+    wearLayer: "4 mm",
+    width: '8"',
+    length: 'RL',
+    finish: "Satin",
+    installType: "float",
+    warranty: "35 Year",
+    waterproof: false,
+    petFriendly: false,
+    displayPrice: 179,
+    compareAtPrice: 199,
+    stockSqFt: 3600,
+    boxCoverageSqFt: 21.3,
+    hexPrimary: "#D4B890",
+    hexSecondary: "#C4A880",
+    description:
+      "Generic engineered maple for shop category and style filter testing. Float install with satin finish and natural grain.",
+  },
+  {
+    name: "Demo Solid Cherry",
+    series: "Heritage Series",
+    type: ProductType.HARDWOOD,
+    colorFamily: "brown",
+    style: ["luxury", "contemporary"],
+    rooms: ["living-room", "office"],
+    thickness: "18mm",
+    wearLayer: "6 mm",
+    width: '5"',
+    length: 'RL',
+    finish: "Natural Oil",
+    installType: "glue-down",
+    warranty: "50 Year",
+    waterproof: false,
+    petFriendly: false,
+    displayPrice: 349,
+    stockSqFt: 1800,
+    boxCoverageSqFt: 18.5,
+    hexPrimary: "#7A4030",
+    hexSecondary: "#6A3020",
+    description:
+      "Generic solid hardwood for HARDWOOD type filters and premium price-range tests. Glue-down install with rich cherry tones.",
+  },
+  {
+    name: "Demo Limited Stock",
+    series: "Demo Collection",
+    type: ProductType.LVP,
+    colorFamily: "white-oak",
+    style: ["modern", "luxury"],
+    rooms: ["bedroom", "office"],
+    thickness: "8mm",
+    wearLayer: "20 mil",
+    width: '9"',
+    length: '48"',
+    finish: "Low Gloss",
+    installType: "click-lock",
+    warranty: "Lifetime Residential",
+    waterproof: true,
+    petFriendly: false,
+    displayPrice: 129,
+    stockSqFt: 95,
+    boxCoverageSqFt: 27.2,
+    hexPrimary: "#E0D4C0",
+    hexSecondary: "#D0C4B0",
+    description:
+      "Generic wide-plank white oak look with very low inventory. Use to test quantity limits and edge-case stock behavior.",
+  },
+  {
+    name: "Demo Pet Pro Plank",
+    series: "Prestige LVP",
+    type: ProductType.LVP,
+    colorFamily: "dark",
+    style: ["farmhouse", "modern"],
+    rooms: ["living-room", "kitchen", "basement"],
+    thickness: "8mm",
+    wearLayer: "20 mil",
+    width: '7"',
+    length: '48"',
+    finish: "Hand Scraped",
+    installType: "click-lock",
+    warranty: "Lifetime Residential",
+    waterproof: true,
+    petFriendly: true,
+    displayPrice: 99,
+    stockSqFt: 6400,
+    boxCoverageSqFt: 23.8,
+    hexPrimary: "#5A4030",
+    hexSecondary: "#4A3020",
+    description:
+      "Generic dark LVP with pet-friendly and waterproof badges. Good for AI finder, inspiration gallery and related-product tests.",
+  },
 ] as const;
 
 const galleryItems = [
@@ -358,6 +510,30 @@ const galleryItems = [
     productSlug: "white-oak-premium",
     imageUrl: "https://images.unsplash.com/photo-1600489000022-c2086d3f50d5?w=900&q=80",
   },
+  {
+    roomType: "office",
+    style: "modern",
+    productSlug: "demo-classic-oak",
+    imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=80",
+  },
+  {
+    roomType: "basement",
+    style: "modern",
+    productSlug: "demo-waterproof-grey",
+    imageUrl: "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=900&q=80",
+  },
+  {
+    roomType: "living-room",
+    style: "luxury",
+    productSlug: "demo-solid-cherry",
+    imageUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=900&q=80",
+  },
+  {
+    roomType: "bedroom",
+    style: "modern",
+    productSlug: "demo-limited-stock",
+    imageUrl: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=900&q=80",
+  },
 ] as const;
 
 const reviews = [
@@ -395,6 +571,27 @@ const reviews = [
     customerName: "Amanda P.",
     rating: 5,
     comment: "Perfect for our basement renovation. Waterproof core gives us total peace of mind.",
+    verified: false,
+  },
+  {
+    productSlug: "demo-classic-oak",
+    customerName: "Test User",
+    rating: 5,
+    comment: "Great demo product for testing reviews, ratings and verified purchase badges.",
+    verified: true,
+  },
+  {
+    productSlug: "demo-waterproof-grey",
+    customerName: "Alex D.",
+    rating: 4,
+    comment: "Solid grey tone for kitchens. Easy to compare side by side with other demo planks.",
+    verified: true,
+  },
+  {
+    productSlug: "demo-solid-cherry",
+    customerName: "Pro Builder",
+    rating: 5,
+    comment: "Premium hardwood look for luxury room styling and trade discount checkout tests.",
     verified: false,
   },
 ] as const;
