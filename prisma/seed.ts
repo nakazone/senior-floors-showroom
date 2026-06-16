@@ -459,6 +459,30 @@ const products = [
     description:
       "Generic dark LVP with pet-friendly and waterproof badges. Good for AI finder, inspiration gallery and related-product tests.",
   },
+  {
+    name: "Demo One Dollar Checkout",
+    series: "Demo Collection",
+    type: ProductType.LVP,
+    colorFamily: "natural",
+    style: ["modern"],
+    rooms: ["living-room"],
+    thickness: "6mm",
+    wearLayer: "12 mil",
+    width: '6"',
+    length: '48"',
+    finish: "Matte",
+    installType: "click-lock",
+    warranty: "Demo Only",
+    waterproof: true,
+    petFriendly: true,
+    displayPrice: 20,
+    stockSqFt: 9999,
+    boxCoverageSqFt: 1,
+    hexPrimary: "#C8B8A0",
+    hexSecondary: "#B8A890",
+    description:
+      "Stripe checkout test product. Adds exactly 1 sq ft at $1.00/sq ft for a $1.00 cart total.",
+  },
 ] as const;
 
 const galleryItems = [
