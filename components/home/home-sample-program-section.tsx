@@ -8,7 +8,6 @@ import {
   useSampleStore,
   type SampleSelectionItem,
 } from "@/lib/stores/sample-store";
-import { toast } from "@/components/shared/toast-provider";
 import { cn } from "@/lib/utils";
 
 interface HomeSampleProgramSectionProps {
@@ -35,19 +34,7 @@ export function HomeSampleProgramSection({ products }: HomeSampleProgramSectionP
   const swatchProducts = products.slice(0, 8);
 
   function handleToggle(product: Product) {
-    const result = toggleItem(productToSelection(product));
-
-    if (result === "added") {
-      toast.success(`${product.name} added to samples`);
-      return;
-    }
-
-    if (result === "removed") {
-      toast.message(`${product.name} removed from samples`);
-      return;
-    }
-
-    toast.error(`You can select up to ${boxSize} samples for this box`);
+    toggleItem(productToSelection(product));
   }
 
   return (
@@ -117,17 +104,17 @@ export function HomeSampleProgramSection({ products }: HomeSampleProgramSectionP
                     type="button"
                     onClick={() => handleToggle(product)}
                     className={cn(
-                      "aspect-square cursor-pointer border p-2 text-left transition-colors",
+                      "relative aspect-square cursor-pointer overflow-hidden border bg-white p-2 text-left transition-colors",
                       selected
-                        ? "border-primary bg-primary text-white"
-                        : "border-border bg-white text-text-dark hover:border-primary",
+                        ? "border-secondary ring-2 ring-secondary/30"
+                        : "border-border hover:border-primary",
                     )}
                   >
                     <div
                       className="mb-2 h-[68%] w-full bg-cream bg-cover bg-center"
                       style={backgroundStyle}
                     />
-                    <p className="truncate text-[9px] font-semibold tracking-wide uppercase">
+                    <p className="truncate text-[9px] font-semibold tracking-wide text-text-dark uppercase">
                       {product.name}
                     </p>
                   </button>

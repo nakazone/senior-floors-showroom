@@ -6,6 +6,7 @@ import type { Product } from "@/types";
 import { useSampleStore } from "@/lib/stores/sample-store";
 import { SampleBoxSelector } from "@/components/samples/sample-box-selector";
 import { SamplePicker } from "@/components/samples/sample-picker";
+import { SampleSelectionTray } from "@/components/samples/sample-selection-tray";
 import { SampleShippingDialog } from "@/components/samples/sample-shipping-dialog";
 import { sampleProgramPerks } from "@/lib/home-sections";
 
@@ -80,14 +81,15 @@ export function SamplesPageView({
         </div>
       </aside>
 
-      <div className="min-w-0 xl:col-start-2 xl:row-span-2">
-        <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
-          Choose your swatches
-        </p>
-        <SamplePicker products={products} />
-      </div>
+      <div className="min-w-0 space-y-6">
+        <div>
+          <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
+            Choose your swatches
+          </p>
+          <SamplePicker products={products} />
+        </div>
 
-      <div className="xl:col-start-1 xl:row-start-2">
+        <SampleSelectionTray />
         <SampleShippingDialog />
       </div>
     </div>

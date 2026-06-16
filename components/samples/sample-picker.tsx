@@ -1,8 +1,8 @@
 "use client";
 
 import type { Product } from "@/types";
+import { Check } from "lucide-react";
 import { useSampleStore } from "@/lib/stores/sample-store";
-import { toast } from "@/components/shared/toast-provider";
 import { cn } from "@/lib/utils";
 
 interface SamplePickerProps {
@@ -28,25 +28,19 @@ export function SamplePicker({ products }: SamplePickerProps) {
   const maxSamples = useSampleStore((state) => state.maxSamples());
 
   function handleToggle(product: Product) {
-    const result = toggleItem(productToSelection(product));
+    toggleItem(productToSelection(product));
+  }
 
-    if (result === "added") {
-      toast.success(`${product.name} added to samples`);
-      return;
-    }
-
-    if (result === "removed") {
-      toast.message(`${product.name} removed from samples`);
-      return;
-    }
-
-    toast.error(`You can select up to ${maxSamples} samples for this box`);
+  function selectionIndex(productId: string) {
+    const index = items.findIndex((item) => item.productId === productId);
+    return index >= 0 ? index + 1 : null;
   }
 
   return (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
       {products.map((product) => {
-        const selected = items.some((item) => item.productId === product.id);
+        const selectedIndex = selectionIndex(product.id);
+        const selected = selectedIndex !== null;
         const variant = product.variants?.[0];
         const backgroundStyle =
           variant?.hexPrimary && variant?.hexSecondary
@@ -62,24 +56,50 @@ export function SamplePicker({ products }: SamplePickerProps) {
             key={product.id}
             type="button"
             onClick={() => handleToggle(product)}
-            className={cn(
-              "sf-card cursor-pointer overflow-hidden p-2 text-left",
+            aria-pressed={selected}
+            aria-label={
               selected
-                ? "border-primary bg-primary text-white ring-2 ring-secondary/30"
-                : "border-border bg-white text-text-dark hover:border-primary",
+                ? `Remove ${product.name} from sample box`
+                : `Add ${product.name} to sample box`
+            }
+            className={cn(
+              "group relative cursor-pointer overflow-hidden rounded-lg border bg-white p-2 text-left transition-all duration-200",
+              selected
+                ? "border-secondary shadow-md ring-2 ring-secondary/30"
+                : "border-border hover:-translate-y-0.5 hover:border-primary hover:shadow-sm",
             )}
           >
-            <div
-              className="mb-2 h-16 w-full rounded-md bg-bg-light bg-cover bg-center"
-              style={backgroundStyle}
-            />
-            <p className="truncate text-sm font-semibold">{product.name}</p>
-            <p className="truncate text-[10px] tracking-[0.12em] uppercase opacity-80">
+            <div className="relative mb-2">
+              <div
+                className="h-16 w-full rounded-md bg-bg-light bg-cover bg-center"
+                style={backgroundStyle}
+              />
+              {selected ? (
+                <>
+                  <span className="absolute top-1.5 left-1.5 flex size-6 items-center justify-center rounded-full bg-secondary text-[11px] font-bold text-text-dark shadow-sm">
+                    {selectedIndex}
+                  </span>
+                  <span className="absolute top-1.5 right-1.5 flex size-6 items-center justify-center rounded-full bg-primary text-white shadow-sm">
+                    <Check className="size-3.5" strokeWidth={3} />
+                  </span>
+                </>
+              ) : null}
+            </div>
+
+            <p className="truncate text-sm font-semibold text-text-dark">{product.name}</p>
+            <p className="truncate text-[10px] tracking-[0.12em] text-text-muted uppercase">
               {product.series}
             </p>
           </button>
         );
       })}
+
+      {items.length >= maxSamples ? (
+        <p className="col-span-full rounded-md border border-secondary/30 bg-secondary/10 px-3 py-2 text-sm text-text-dark">
+          Your {maxSamples}-sample box is full. Remove a selection below to choose a
+          different swatch.
+        </p>
+      ) : null}
     </div>
   );
 }

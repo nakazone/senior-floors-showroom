@@ -61,22 +61,8 @@ export function SampleShippingDialog({ className }: SampleShippingDialogProps) {
                 ? isFree
                   ? "Free shipping, delivered in 2-4 business days"
                   : `${formatCartCurrency(total)} - address collected at checkout`
-                : `Select up to ${maxSamples} swatches to continue`}
+                : `Select up to ${maxSamples} swatches above`}
             </p>
-
-            {hasSelection ? (
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {items.map((item) => (
-                  <span
-                    key={item.productId}
-                    title={item.name}
-                    className="inline-flex max-w-[120px] truncate rounded-md border border-border bg-bg-light px-2 py-1 text-[11px] font-medium text-text-dark"
-                  >
-                    {item.name}
-                  </span>
-                ))}
-              </div>
-            ) : null}
           </div>
 
           <div className="flex shrink-0 flex-col items-end gap-1 text-right">
