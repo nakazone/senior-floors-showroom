@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 
   if (isAlgoliaConfigured()) {
     const hits = await searchAlgoliaSuggestions(query, 8);
-    if (hits) {
+    if (hits !== null && hits.length > 0) {
       return NextResponse.json({ hits, source: "algolia" });
     }
   }

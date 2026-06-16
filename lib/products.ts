@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { searchAlgoliaProducts } from "@/lib/algolia-products";
 import { mapDbProduct } from "@/lib/product-mapper";
-import { buildCatalogWhere } from "@/lib/catalog-filters";
+import { buildCatalogWhere, countActiveFilters } from "@/lib/catalog-filters";
 import type { CatalogFacets, CatalogFilters } from "@/types/catalog";
 import type { Product, ProductType } from "@/types";
 
@@ -97,8 +97,11 @@ export async function searchCatalogProducts(
   filters: CatalogFilters,
 ): Promise<Product[]> {
   const algoliaResults = await searchAlgoliaProducts(filters);
-  if (algoliaResults) {
-    return algoliaResults;
+  if (algoliaResults !== null) {
+    const hasActiveFilters = countActiveFilters(filters) > 0;
+    if (algoliaResults.length > 0 || hasActiveFilters) {
+      return algoliaResults;
+    }
   }
 
   try {
