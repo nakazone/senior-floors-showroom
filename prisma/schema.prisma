@@ -1,0 +1,266 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum ProductType {
+  LVP
+  ENGINEERED
+  HARDWOOD
+}
+
+enum AccountType {
+  RETAIL
+  CONTRACTOR
+  DESIGNER
+  BUILDER
+}
+
+enum ProStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum SampleStatus {
+  REQUESTED
+  SHIPPED
+  DELIVERED
+}
+
+enum QuoteStatus {
+  OPEN
+  CONVERTED
+  EXPIRED
+}
+
+model Product {
+  id              String              @id @default(cuid())
+  slug            String              @unique
+  name            String
+  series          String
+  description     String
+  type            ProductType
+  colorFamily     String
+  style           String[]
+  rooms           String[]
+  thickness       String
+  wearLayer       String
+  width           String
+  length          String
+  finish          String
+  installType     String
+  warranty        String
+  waterproof      Boolean             @default(false)
+  petFriendly     Boolean             @default(false)
+  pricePerSqFt    Decimal             @db.Decimal(10, 2)
+  compareAtPrice  Decimal?            @db.Decimal(10, 2)
+  stockSqFt       Int
+  boxCoverageSqFt Int
+  images          ProductImage[]
+  variants        ProductVariant[]
+  reviews         Review[]
+  orderItems      OrderItem[]
+  wishlistItems   WishlistItem[]
+  sampleRequests  SampleRequestItem[]
+  visualizations  Visualization[]
+  galleryItems    GalleryItem[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([type])
+  @@index([colorFamily])
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  type      String
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model ProductVariant {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  colorName    String
+  hexPrimary   String
+  hexSecondary String
+  swatchUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model Customer {
+  id              String          @id @default(cuid())
+  supabaseUserId  String          @unique
+  email           String          @unique
+  name            String?
+  phone           String?
+  accountType     AccountType     @default(RETAIL)
+  proStatus       ProStatus?
+  discountPercent Decimal?        @default(0) @db.Decimal(5, 2)
+  orders          Order[]
+  wishlistItems   WishlistItem[]
+  sampleRequests  SampleRequest[]
+  quotes          Quote[]
+  visualizations  Visualization[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model Order {
+  id                      String      @id @default(cuid())
+  customerId              String
+  customer                Customer    @relation(fields: [customerId], references: [id])
+  stripePaymentIntentId   String?     @unique
+  stripeCheckoutSessionId String?     @unique
+  status                  OrderStatus @default(PENDING)
+  items                   OrderItem[]
+  subtotal                Decimal     @db.Decimal(10, 2)
+  tax                     Decimal     @db.Decimal(10, 2)
+  shipping                Decimal     @db.Decimal(10, 2)
+  total                   Decimal     @db.Decimal(10, 2)
+  shippingAddress         Json
+  trackingNumber          String?
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+
+  @@index([customerId])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  sqFt       Decimal  @db.Decimal(10, 2)
+  unitPrice  Decimal  @db.Decimal(10, 2)
+  totalPrice Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([customerId, productId])
+}
+
+model SampleRequest {
+  id              String              @id @default(cuid())
+  customerId      String?
+  customer        Customer?           @relation(fields: [customerId], references: [id])
+  email           String
+  shippingAddress Json
+  items           SampleRequestItem[]
+  status          SampleStatus        @default(REQUESTED)
+  isPaid          Boolean             @default(false)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([customerId])
+  @@index([email])
+}
+
+model SampleRequestItem {
+  id              String        @id @default(cuid())
+  sampleRequestId String
+  sampleRequest   SampleRequest @relation(fields: [sampleRequestId], references: [id], onDelete: Cascade)
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([sampleRequestId])
+  @@index([productId])
+}
+
+model Quote {
+  id            String      @id @default(cuid())
+  customerId    String
+  customer      Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items         Json
+  totalEstimate Decimal     @db.Decimal(10, 2)
+  status        QuoteStatus @default(OPEN)
+  expiresAt     DateTime
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([customerId])
+}
+
+model Visualization {
+  id               String    @id @default(cuid())
+  customerId       String?
+  customer         Customer? @relation(fields: [customerId], references: [id])
+  roomImageUrl     String
+  productId        String
+  product          Product   @relation(fields: [productId], references: [id])
+  installDirection String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([customerId])
+  @@index([productId])
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customerName String
+  rating       Int
+  comment      String
+  verified     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model GalleryItem {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  roomType  String
+  style     String
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([roomType])
+  @@index([style])
+  @@index([productId])
+}

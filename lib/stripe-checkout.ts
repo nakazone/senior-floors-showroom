@@ -1,0 +1,102 @@
+import { z } from "zod";
+import type Stripe from "stripe";
+import type { CartItem } from "@/types";
+import { getLineTotal } from "@/lib/cart";
+
+export const checkoutCartItemSchema = z.object({
+  productId: z.string().min(1),
+  slug: z.string().min(1),
+  name: z.string().min(1),
+  series: z.string().optional().default(""),
+  pricePerSqFt: z.number().positive(),
+  sqFt: z.number().positive(),
+  boxCoverageSqFt: z.number().positive().optional().default(20),
+  imageUrl: z.string().url().optional(),
+});
+
+export const checkoutRequestSchema = z.object({
+  items: z.array(checkoutCartItemSchema).min(1).max(20),
+});
+
+export type CheckoutCartItem = z.infer<typeof checkoutCartItemSchema>;
+
+export type StripeCartMetaItem = {
+  p: string;
+  s: number;
+  u: number;
+};
+
+export function serializeCartMetadata(items: CheckoutCartItem[]) {
+  const payload: StripeCartMetaItem[] = items.map((item) => ({
+    p: item.productId,
+    s: item.sqFt,
+    u: item.pricePerSqFt,
+  }));
+
+  return JSON.stringify(payload);
+}
+
+export function parseCartMetadata(raw: string | null | undefined) {
+  if (!raw) return [];
+
+  try {
+    const parsed = JSON.parse(raw) as StripeCartMetaItem[];
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .map((entry) => ({
+        productId: entry.p,
+        sqFt: entry.s,
+        unitPrice: entry.u,
+      }))
+      .filter(
+        (entry) =>
+          entry.productId &&
+          entry.sqFt > 0 &&
+          entry.unitPrice > 0,
+      );
+  } catch {
+    return [];
+  }
+}
+
+export function buildCheckoutLineItems(
+  items: CheckoutCartItem[],
+): Stripe.Checkout.SessionCreateParams.LineItem[] {
+  return items.map((item) => ({
+    quantity: 1,
+    price_data: {
+      currency: "usd",
+      unit_amount: Math.round(getLineTotal(item) * 100),
+      product_data: {
+        name: item.name,
+        description: `${item.series || "Senior Floors"} | ${item.sqFt.toFixed(1)} sq ft`,
+        images: item.imageUrl ? [item.imageUrl] : undefined,
+        metadata: {
+          productId: item.productId,
+          slug: item.slug,
+        },
+      },
+    },
+  }));
+}
+
+export function toCheckoutCartItem(item: CartItem): CheckoutCartItem {
+  return {
+    productId: item.productId,
+    slug: item.slug,
+    name: item.name,
+    series: item.series,
+    pricePerSqFt: item.pricePerSqFt,
+    sqFt: item.sqFt,
+    boxCoverageSqFt: item.boxCoverageSqFt,
+    imageUrl: item.imageUrl,
+  };
+}
+
+export function isStripeConfigured() {
+  return Boolean(
+    process.env.STRIPE_SECRET_KEY &&
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  );
+}
