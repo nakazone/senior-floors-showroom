@@ -104,7 +104,9 @@ export const RoomCanvas = forwardRef<RoomCanvasHandle, RoomCanvasProps>(
           const capability = await detectCapability();
           aiBackendRef.current = options?.useServer
             ? "server-required"
-            : capability.aiBackend;
+            : capability.aiBackend === "webgpu"
+              ? "wasm"
+              : capability.aiBackend;
 
           if (aiBackendRef.current === "server-required" && !options?.useServer) {
             throw new Error("SERVER_CONSENT_REQUIRED");

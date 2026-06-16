@@ -1,27 +1,13 @@
-import * as Comlink from "comlink";
 import type { AiBackend, FloorMaskResult } from "@/lib/visualizer/types";
-import type { FloorSegmentationWorkerApi } from "@/lib/visualizer/workers/floor-segmentation.worker";
-
-let worker: Worker | null = null;
-let api: Comlink.Remote<FloorSegmentationWorkerApi> | null = null;
-
-function getWorkerApi() {
-  if (!worker || !api) {
-    worker = new Worker(
-      new URL("./workers/floor-segmentation.worker.ts", import.meta.url),
-      { type: "module" },
-    );
-    api = Comlink.wrap<FloorSegmentationWorkerApi>(worker);
-  }
-  return api;
-}
 
 export async function segmentFloorOnDevice(
   imageBitmap: ImageBitmap,
   backend: AiBackend,
 ): Promise<FloorMaskResult> {
-  const remote = getWorkerApi();
-  return remote.segmentFloor(imageBitmap, backend);
+  const { segmentFloorOnDevice: runSegmentation } = await import(
+    "@/lib/visualizer/segmentation-engine"
+  );
+  return runSegmentation(imageBitmap, backend);
 }
 
 export async function segmentFloorOnServer(file: File): Promise<FloorMaskResult> {
@@ -52,7 +38,5 @@ export async function segmentFloorOnServer(file: File): Promise<FloorMaskResult>
 }
 
 export function terminateSegmentationWorker() {
-  worker?.terminate();
-  worker = null;
-  api = null;
+  // No-op: segmentation runs on the main thread.
 }

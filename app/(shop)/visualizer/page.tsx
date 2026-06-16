@@ -1,4 +1,4 @@
-import { RoomVisualizer } from "@/components/visualizer/room-visualizer";
+import { RoomVisualizerLoader } from "@/components/visualizer/room-visualizer-loader";
 import { getFeaturedProducts } from "@/lib/products";
 import { productToVisualizerOption } from "@/lib/visualizer/utils";
 import { createPlaceholderMetadata } from "@/components/shared/placeholder-page";
@@ -28,10 +28,10 @@ export default async function VisualizerPage({ searchParams }: VisualizerPagePro
         </h1>
         <p className="mb-10 max-w-2xl text-text-light">
           Upload a photo of your space and preview how our LVP and engineered hardwood
-          floors would look — processed privately on your device with AI floor segmentation,
-          perspective mapping, and real-time WebGL compositing.
+          floors would look. Processing runs privately on your device with AI floor
+          segmentation, perspective mapping, and real-time WebGL compositing.
         </p>
-        <RoomVisualizer
+        <RoomVisualizerLoader
           products={visualizerProducts}
           initialProductSlug={params.product}
         />

@@ -66,9 +66,14 @@ export function RoomVisualizer({ products, initialProductSlug }: RoomVisualizerP
           setStage("idle");
           return;
         }
+
+        handleStageChange(
+          "error",
+          error instanceof Error ? error.message : "Unable to process photo",
+        );
       }
     },
-    [selectedProduct],
+    [selectedProduct, handleStageChange],
   );
 
   const handleProductSelect = useCallback(async (product: VisualizerProductOption) => {
