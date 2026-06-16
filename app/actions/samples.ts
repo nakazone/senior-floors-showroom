@@ -4,9 +4,10 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { createSampleRequest } from "@/lib/sample-requests";
 import {
-  MAX_SAMPLES,
+  MAX_SAMPLE_BOX_SIZE,
   calculateSampleTotal,
-  getSampleUnitPrice,
+  getSampleBoxPrice,
+  type SampleBoxSize,
 } from "@/lib/samples";
 import { createClient } from "@/lib/supabase/server";
 
@@ -23,7 +24,8 @@ const requestSamplesSchema = z.object({
   email: z.string().email(),
   name: z.string().min(1).optional(),
   shippingAddress: shippingAddressSchema,
-  productIds: z.array(z.string().min(1)).min(1).max(MAX_SAMPLES),
+  productIds: z.array(z.string().min(1)).min(1).max(MAX_SAMPLE_BOX_SIZE),
+  boxSize: z.union([z.literal(3), z.literal(5)]).default(3),
   freeWithOrder: z.boolean().optional().default(false),
 });
 
@@ -35,7 +37,8 @@ export type RequestSamplesResult =
       success: false;
       requiresPayment: true;
       amount: number;
-      unitPrice: number;
+      boxPrice: number;
+      boxSize: SampleBoxSize;
       sampleCount: number;
     }
   | {
@@ -56,8 +59,14 @@ export async function requestSamples(
   }
 
   const data = parsed.data;
+
+  if (data.productIds.length > data.boxSize) {
+    return { success: false, error: "invalid_input" };
+  }
+
   const total = calculateSampleTotal(data.productIds.length, {
     freeWithOrder: data.freeWithOrder,
+    boxSize: data.boxSize,
   });
 
   if (total > 0) {
@@ -65,7 +74,8 @@ export async function requestSamples(
       success: false,
       requiresPayment: true,
       amount: total,
-      unitPrice: getSampleUnitPrice(),
+      boxPrice: getSampleBoxPrice(data.boxSize),
+      boxSize: data.boxSize,
       sampleCount: data.productIds.length,
     };
   }
@@ -91,6 +101,7 @@ export async function requestSamples(
       name: data.name,
       shippingAddress: data.shippingAddress,
       productIds: data.productIds,
+      boxSize: data.boxSize,
       customerId,
       isPaid: false,
     });

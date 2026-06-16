@@ -80,7 +80,7 @@ export const visualizerSteps = [
 ] as const;
 
 export const sampleProgramPerks = [
-  "Free shipping on up to 3 samples",
+  "Choose a 3- or 5-sample box",
   "Delivered in 2-4 business days",
-  "No purchase required to order",
+  "Free with any flooring order",
 ] as const;

@@ -1,11 +1,7 @@
 "use client";
 
 import type { Product } from "@/types";
-import { MAX_SAMPLES } from "@/lib/samples";
-import {
-  useSampleStore,
-  type SampleSelectionItem,
-} from "@/lib/stores/sample-store";
+import { useSampleStore } from "@/lib/stores/sample-store";
 import { toast } from "@/components/shared/toast-provider";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +9,7 @@ interface SamplePickerProps {
   products: Product[];
 }
 
-function productToSelection(product: Product): SampleSelectionItem {
+function productToSelection(product: Product) {
   const variant = product.variants?.[0];
 
   return {
@@ -29,6 +25,7 @@ function productToSelection(product: Product): SampleSelectionItem {
 export function SamplePicker({ products }: SamplePickerProps) {
   const items = useSampleStore((state) => state.items);
   const toggleItem = useSampleStore((state) => state.toggleItem);
+  const maxSamples = useSampleStore((state) => state.maxSamples());
 
   function handleToggle(product: Product) {
     const result = toggleItem(productToSelection(product));
@@ -43,11 +40,11 @@ export function SamplePicker({ products }: SamplePickerProps) {
       return;
     }
 
-    toast.error(`You can select up to ${MAX_SAMPLES} samples per order`);
+    toast.error(`You can select up to ${maxSamples} samples for this box`);
   }
 
   return (
-    <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
       {products.map((product) => {
         const selected = items.some((item) => item.productId === product.id);
         const variant = product.variants?.[0];
@@ -66,18 +63,18 @@ export function SamplePicker({ products }: SamplePickerProps) {
             type="button"
             onClick={() => handleToggle(product)}
             className={cn(
-              "cursor-pointer border p-2 text-left transition-colors",
+              "sf-card cursor-pointer overflow-hidden p-2 text-left",
               selected
-                ? "border-espresso bg-espresso text-bone"
-                : "border-sand bg-white text-espresso hover:border-espresso",
+                ? "border-primary bg-primary text-white ring-2 ring-secondary/30"
+                : "border-border bg-white text-text-dark hover:border-primary",
             )}
           >
             <div
-              className="mb-2 h-16 w-full bg-cream bg-cover bg-center"
+              className="mb-2 h-16 w-full rounded-md bg-bg-light bg-cover bg-center"
               style={backgroundStyle}
             />
-            <p className="truncate font-serif text-sm">{product.name}</p>
-            <p className="truncate text-[10px] tracking-wider uppercase opacity-70">
+            <p className="truncate text-sm font-semibold">{product.name}</p>
+            <p className="truncate text-[10px] tracking-[0.12em] uppercase opacity-80">
               {product.series}
             </p>
           </button>

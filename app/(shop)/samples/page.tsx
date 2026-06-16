@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Order Samples",
-  description: `Order up to 3 flooring samples from ${siteConfig.name}.`,
+  description: `Order flooring samples in a 3- or 5-sample box from ${siteConfig.name}.`,
 };
 
 interface SamplesPageProps {

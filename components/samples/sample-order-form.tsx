@@ -5,8 +5,7 @@ import { requestSamples } from "@/app/actions/samples";
 import { trackGenerateLead } from "@/lib/analytics";
 import {
   calculateSampleTotal,
-  getSampleUnitPrice,
-  MAX_SAMPLES,
+  getSampleBoxPrice,
 } from "@/lib/samples";
 import { useSampleStore } from "@/lib/stores/sample-store";
 import { useCartStore } from "@/lib/stores/cart-store";
@@ -18,6 +17,8 @@ import { formatCartCurrency } from "@/lib/cart";
 
 export function SampleOrderForm() {
   const items = useSampleStore((state) => state.items);
+  const boxSize = useSampleStore((state) => state.boxSize);
+  const maxSamples = useSampleStore((state) => state.maxSamples());
   const clearAll = useSampleStore((state) => state.clearAll);
   const cartItems = useCartStore((state) => state.items);
   const [isPending, startTransition] = useTransition();
@@ -32,9 +33,9 @@ export function SampleOrderForm() {
   const [postalCode, setPostalCode] = useState("");
 
   const freeWithOrder = cartItems.length > 0;
-  const unitPrice = getSampleUnitPrice();
-  const total = calculateSampleTotal(items.length, { freeWithOrder });
+  const total = calculateSampleTotal(items.length, { freeWithOrder, boxSize });
   const isFree = total <= 0;
+  const boxPrice = getSampleBoxPrice(boxSize);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,6 +57,7 @@ export function SampleOrderForm() {
         country: "US",
       },
       productIds: items.map((item) => item.productId),
+      boxSize,
       freeWithOrder,
     };
 
@@ -82,6 +84,7 @@ export function SampleOrderForm() {
               email,
               name: name || undefined,
               productIds: items.map((item) => item.productId),
+              boxSize,
               freeWithOrder,
             }),
           });
@@ -110,23 +113,26 @@ export function SampleOrderForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="border border-sand bg-bone p-4">
-        <p className="font-serif text-lg text-espresso">
-          Selected: <span className="text-gold">{items.length}</span> /{" "}
-          {MAX_SAMPLES} samples
+      <div className="rounded-lg border border-border bg-white p-4">
+        <p className="text-lg font-bold text-text-dark">
+          {boxSize}-sample box:{" "}
+          <span className="text-secondary">
+            {items.length} / {maxSamples}
+          </span>{" "}
+          selected
         </p>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-text-light">
           {isFree
             ? "Free shipping. Delivered in 2-4 business days."
-            : `${formatCartCurrency(total)} total (${formatCartCurrency(unitPrice)} per sample).`}
+            : `${formatCartCurrency(total)} for your ${boxSize}-sample box.`}
         </p>
         {freeWithOrder ? (
-          <p className="mt-1 text-xs text-sage">
+          <p className="mt-1 text-xs text-success">
             Samples are free with items in your cart.
           </p>
-        ) : unitPrice > 0 ? (
-          <p className="mt-1 text-xs text-muted-foreground">
-            $5 per sample, or free when you have flooring in your cart.
+        ) : !isFree ? (
+          <p className="mt-1 text-xs text-text-muted">
+            {formatCartCurrency(boxPrice)} per box, or free when you have flooring in your cart.
           </p>
         ) : null}
       </div>
@@ -138,7 +144,7 @@ export function SampleOrderForm() {
             id="sample-name"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="mt-1.5 rounded-none border-sand bg-white"
+            className="mt-1.5"
           />
         </div>
         <div className="sm:col-span-2">
@@ -149,7 +155,7 @@ export function SampleOrderForm() {
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="mt-1.5 rounded-none border-sand bg-white"
+            className="mt-1.5"
           />
         </div>
         <div className="sm:col-span-2">
@@ -159,7 +165,7 @@ export function SampleOrderForm() {
             required={isFree}
             value={line1}
             onChange={(event) => setLine1(event.target.value)}
-            className="mt-1.5 rounded-none border-sand bg-white"
+            className="mt-1.5"
           />
         </div>
         {isFree ? (
@@ -170,7 +176,7 @@ export function SampleOrderForm() {
                 id="sample-line2"
                 value={line2}
                 onChange={(event) => setLine2(event.target.value)}
-                className="mt-1.5 rounded-none border-sand bg-white"
+                className="mt-1.5"
               />
             </div>
             <div>
@@ -180,7 +186,7 @@ export function SampleOrderForm() {
                 required
                 value={city}
                 onChange={(event) => setCity(event.target.value)}
-                className="mt-1.5 rounded-none border-sand bg-white"
+                className="mt-1.5"
               />
             </div>
             <div>
@@ -191,7 +197,7 @@ export function SampleOrderForm() {
                 maxLength={2}
                 value={state}
                 onChange={(event) => setState(event.target.value)}
-                className="mt-1.5 rounded-none border-sand bg-white uppercase"
+                className="mt-1.5 uppercase"
               />
             </div>
             <div>
@@ -201,12 +207,12 @@ export function SampleOrderForm() {
                 required
                 value={postalCode}
                 onChange={(event) => setPostalCode(event.target.value)}
-                className="mt-1.5 rounded-none border-sand bg-white"
+                className="mt-1.5"
               />
             </div>
           </>
         ) : (
-          <div className="sm:col-span-2 text-sm text-muted-foreground">
+          <div className="sm:col-span-2 text-sm text-text-muted">
             Shipping address will be collected securely on Stripe Checkout.
           </div>
         )}
@@ -214,13 +220,14 @@ export function SampleOrderForm() {
 
       <Button
         type="submit"
+        variant="secondary"
         disabled={isPending || isPaying || items.length === 0}
-        className="w-full rounded-none bg-espresso py-6 text-[13px] tracking-wider uppercase hover:bg-walnut"
+        className="w-full py-6"
       >
         {isPending || isPaying
           ? "Processing..."
           : isFree
-            ? "Order My Samples - Free"
+            ? `Order My ${boxSize}-Sample Box — Free`
             : `Pay ${formatCartCurrency(total)} with Stripe`}
       </Button>
     </form>

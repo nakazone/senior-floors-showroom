@@ -27,7 +27,9 @@ export async function POST(request: Request) {
       {
         requiresPayment: true,
         amount: result.amount,
-        unitPrice: result.unitPrice,
+        unitPrice: result.boxPrice,
+        boxPrice: result.boxPrice,
+        boxSize: result.boxSize,
         sampleCount: result.sampleCount,
       },
       { status: 402 },

@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import type Stripe from "stripe";
 import prisma from "@/lib/prisma";
 import { findOrCreateCustomerByEmail } from "@/lib/orders";
-import { parseSamplePayload } from "@/lib/samples";
+import { parseSamplePayload, type SampleBoxSize } from "@/lib/samples";
 import type { ShippingAddress } from "@/types";
 
 export type CreateSampleRequestInput = {
@@ -10,6 +10,7 @@ export type CreateSampleRequestInput = {
   name?: string | null;
   shippingAddress: ShippingAddress;
   productIds: string[];
+  boxSize?: SampleBoxSize;
   customerId?: string | null;
   isPaid: boolean;
   stripeSessionId?: string | null;
@@ -42,6 +43,7 @@ export async function createSampleRequest(input: CreateSampleRequestInput) {
 
   const shippingAddress = {
     ...input.shippingAddress,
+    ...(input.boxSize ? { boxSize: input.boxSize } : {}),
     ...(input.stripeSessionId
       ? { stripeSessionId: input.stripeSessionId }
       : {}),
@@ -89,7 +91,7 @@ export async function createSampleRequestFromCheckoutSession(
     return existing;
   }
 
-  const productIds = parseSamplePayload(session.metadata?.samplePayload);
+  const { productIds, boxSize } = parseSamplePayload(session.metadata?.samplePayload);
   if (productIds.length === 0) {
     throw new Error("Checkout session is missing sample metadata");
   }
@@ -121,6 +123,7 @@ export async function createSampleRequestFromCheckoutSession(
     name: session.customer_details?.name ?? session.metadata?.customerName,
     shippingAddress,
     productIds,
+    boxSize,
     customerId: customer.id,
     isPaid: true,
     stripeSessionId,

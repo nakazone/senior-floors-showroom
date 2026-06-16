@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Product } from "@/types";
-import { MAX_SAMPLES } from "@/lib/samples";
 import { sampleProgramPerks } from "@/lib/home-sections";
 import {
   useSampleStore,
@@ -31,6 +30,7 @@ function productToSelection(product: Product): SampleSelectionItem {
 
 export function HomeSampleProgramSection({ products }: HomeSampleProgramSectionProps) {
   const items = useSampleStore((state) => state.items);
+  const boxSize = useSampleStore((state) => state.boxSize);
   const toggleItem = useSampleStore((state) => state.toggleItem);
   const swatchProducts = products.slice(0, 8);
 
@@ -47,7 +47,7 @@ export function HomeSampleProgramSection({ products }: HomeSampleProgramSectionP
       return;
     }
 
-    toast.error(`You can select up to ${MAX_SAMPLES} samples per order`);
+    toast.error(`You can select up to ${boxSize} samples for this box`);
   }
 
   return (
@@ -65,15 +65,15 @@ export function HomeSampleProgramSection({ products }: HomeSampleProgramSectionP
               Touch before <em>you decide</em>
             </h2>
             <p className="mt-4 mb-6 text-base leading-relaxed text-text-light">
-              Order up to 3 physical samples and receive them at your door. Feel the
-              texture, see the color in your light, compare against your furniture,
-              then buy with confidence.
+              Choose a 3- or 5-sample box and receive real swatches at your door.
+              Feel the texture, see the color in your light, compare against your
+              furniture, then buy with confidence.
             </p>
 
             <p className="mb-2 text-lg font-semibold text-text-dark">
               Selected:{" "}
               <span className="text-secondary">
-                {items.length} / {MAX_SAMPLES}
+                {items.length} / {boxSize}
               </span>{" "}
               samples
             </p>
@@ -88,7 +88,7 @@ export function HomeSampleProgramSection({ products }: HomeSampleProgramSectionP
               <Link href="/samples" className="btn-dark no-underline">
                 Order My Samples
               </Link>
-              <span className="text-sm text-text-muted">$5/ea or free with any order</span>
+              <span className="text-sm text-text-muted">Boxes from $15, or free with any order</span>
             </div>
           </motion.div>
 

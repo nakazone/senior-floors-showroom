@@ -4,8 +4,8 @@ import prisma from "@/lib/prisma";
 import { siteConfig } from "@/lib/siteConfig";
 import {
   calculateSampleTotal,
-  getSampleUnitPrice,
-  MAX_SAMPLES,
+  getSampleBoxPrice,
+  MAX_SAMPLE_BOX_SIZE,
   serializeSamplePayload,
 } from "@/lib/samples";
 import { getStripe } from "@/lib/stripe";
@@ -18,7 +18,8 @@ export const dynamic = "force-dynamic";
 const paidSampleCheckoutSchema = z.object({
   email: z.string().email(),
   name: z.string().min(1).optional(),
-  productIds: z.array(z.string().min(1)).min(1).max(MAX_SAMPLES),
+  productIds: z.array(z.string().min(1)).min(1).max(MAX_SAMPLE_BOX_SIZE),
+  boxSize: z.union([z.literal(3), z.literal(5)]).default(3),
   freeWithOrder: z.boolean().optional().default(false),
 });
 
@@ -48,8 +49,17 @@ export async function POST(request: Request) {
   }
 
   const data = parsed.data;
+
+  if (data.productIds.length > data.boxSize) {
+    return NextResponse.json(
+      { error: `You can only order up to ${data.boxSize} samples in this box.` },
+      { status: 400 },
+    );
+  }
+
   const total = calculateSampleTotal(data.productIds.length, {
     freeWithOrder: data.freeWithOrder,
+    boxSize: data.boxSize,
   });
 
   if (total <= 0) {
@@ -98,7 +108,7 @@ export async function POST(request: Request) {
     // Guest checkout remains available.
   }
 
-  const unitPrice = getSampleUnitPrice();
+  const boxPrice = getSampleBoxPrice(data.boxSize);
 
   try {
     const stripe = getStripe();
@@ -106,21 +116,23 @@ export async function POST(request: Request) {
       mode: "payment",
       payment_method_types: ["card"],
       customer_email: customerEmail,
-      line_items: products.map((product) => ({
-        quantity: 1,
-        price_data: {
-          currency: "usd",
-          unit_amount: Math.round(unitPrice * 100),
-          product_data: {
-            name: `${product.name} Sample`,
-            description: "Physical flooring sample",
-            metadata: {
-              productId: product.id,
-              slug: product.slug,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "usd",
+            unit_amount: Math.round(boxPrice * 100),
+            product_data: {
+              name: `${data.boxSize}-Sample Box`,
+              description: `${products.length} flooring swatch${products.length === 1 ? "" : "es"}: ${products.map((product) => product.name).join(", ")}`,
+              metadata: {
+                boxSize: String(data.boxSize),
+                productIds: products.map((product) => product.id).join(","),
+              },
             },
           },
         },
-      })),
+      ],
       success_url: `${siteUrl}/samples/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/samples`,
       shipping_address_collection: {
@@ -128,7 +140,11 @@ export async function POST(request: Request) {
       },
       metadata: {
         checkoutType: "samples",
-        samplePayload: serializeSamplePayload(products.map((product) => product.id)),
+        samplePayload: serializeSamplePayload(
+          products.map((product) => product.id),
+          data.boxSize,
+        ),
+        boxSize: String(data.boxSize),
         customerId: customerId ?? "",
         customerEmail,
         customerName: customerName ?? "",
