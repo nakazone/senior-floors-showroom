@@ -8,7 +8,7 @@ import { ProductSpecs } from "@/components/product/product-specs";
 import { ProductDownloads } from "@/components/product/product-downloads";
 import { AddToCartButton } from "@/components/product/add-to-cart-button";
 import { CompareToggleButton } from "@/components/product/compare-toggle-button";
-import { RoomvoEmbed } from "@/components/visualizer/roomvo-embed";
+import { RoomVisualizerEmbed } from "@/components/visualizer/room-visualizer-embed";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -100,7 +100,7 @@ export function ProductDetailPanel({ product }: ProductDetailPanelProps) {
             </DialogTitle>
           </DialogHeader>
           <div className="p-4">
-            <RoomvoEmbed productSku={product.slug} />
+            <RoomVisualizerEmbed product={product} />
           </div>
         </DialogContent>
       </Dialog>

@@ -14,6 +14,25 @@ function getR2Hostname() {
 const r2Hostname = getR2Hostname();
 
 const nextConfig: NextConfig = {
+  webpack: (config, { isServer }) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      sharp$: false,
+      "onnxruntime-node$": false,
+    };
+
+    if (!isServer) {
+      config.output = {
+        ...config.output,
+        environment: {
+          ...(config.output?.environment ?? {}),
+          asyncFunction: true,
+        },
+      };
+    }
+
+    return config;
+  },
   images: {
     remotePatterns: [
       {
