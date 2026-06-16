@@ -1,8 +1,17 @@
 import type { NextConfig } from "next";
 
-const r2Hostname = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
-  ? new URL(process.env.NEXT_PUBLIC_R2_PUBLIC_URL).hostname
-  : undefined;
+function getR2Hostname() {
+  const raw = process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim();
+  if (!raw) return undefined;
+
+  try {
+    return new URL(raw).hostname;
+  } catch {
+    return undefined;
+  }
+}
+
+const r2Hostname = getR2Hostname();
 
 const nextConfig: NextConfig = {
   images: {

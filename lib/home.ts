@@ -45,14 +45,18 @@ export async function getHomeReviews(limit = 4): Promise<HomeReview[]> {
 }
 
 export async function getHomeGalleryItems(limit = 6): Promise<HomeGalleryItem[]> {
-  const items = await getInspirationGalleryItems({});
-  return items.slice(0, limit).map((item) => ({
-    id: item.id,
-    imageUrl: item.imageUrl,
-    roomType: item.roomType,
-    style: item.style,
-    productName: item.productName,
-  }));
+  try {
+    const items = await getInspirationGalleryItems({});
+    return items.slice(0, limit).map((item) => ({
+      id: item.id,
+      imageUrl: item.imageUrl,
+      roomType: item.roomType,
+      style: item.style,
+      productName: item.productName,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function getHomeAggregateRating() {
