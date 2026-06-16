@@ -19,6 +19,7 @@
 
 # production
 /build
+/public/onnx/
 
 # misc
 .DS_Store

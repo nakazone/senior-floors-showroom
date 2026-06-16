@@ -2,10 +2,14 @@ import { env } from "@huggingface/transformers";
 
 let configured = false;
 
+function isSafariBrowser() {
+  if (typeof navigator === "undefined") return false;
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+
 /**
  * Configure Transformers.js ONNX runtime for browser + Next.js/Vercel.
- * Workers and some production bundles fail to resolve bundled WASM paths,
- * which surfaces as cryptic minified errors like "h is not a function".
+ * WASM files are copied to public/onnx during postinstall (see scripts/copy-onnx-wasm.js).
  */
 export function configureTransformersEnv() {
   if (configured || typeof window === "undefined") return;
@@ -15,12 +19,19 @@ export function configureTransformersEnv() {
 
   const wasmBackend = env.backends?.onnx?.wasm;
   if (wasmBackend) {
-    wasmBackend.numThreads = Math.min(
-      typeof navigator !== "undefined" ? navigator.hardwareConcurrency || 1 : 1,
-      4,
-    );
-    wasmBackend.wasmPaths =
-      "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/";
+    // Single thread avoids SharedArrayBuffer / COOP requirements on Vercel.
+    wasmBackend.numThreads = 1;
+
+    const prefix = `${window.location.origin}/onnx/`;
+    wasmBackend.wasmPaths = isSafariBrowser()
+      ? {
+          mjs: `${prefix}ort-wasm-simd-threaded.mjs`,
+          wasm: `${prefix}ort-wasm-simd-threaded.wasm`,
+        }
+      : {
+          mjs: `${prefix}ort-wasm-simd-threaded.asyncify.mjs`,
+          wasm: `${prefix}ort-wasm-simd-threaded.asyncify.wasm`,
+        };
   }
 
   configured = true;
