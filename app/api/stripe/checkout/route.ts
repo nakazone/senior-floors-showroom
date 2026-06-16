@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   buildCheckoutLineItems,
   checkoutRequestSchema,
+  getStripeConfigError,
   isStripeConfigured,
   serializeCartMetadata,
   type CheckoutCartItem,
@@ -61,7 +62,7 @@ async function resolveCheckoutItems(items: CheckoutCartItem[]) {
 export async function POST(request: Request) {
   if (!isStripeConfigured()) {
     return NextResponse.json(
-      { error: "Stripe is not configured. Add STRIPE_SECRET_KEY to continue." },
+      { error: getStripeConfigError() ?? "Stripe is not configured." },
       { status: 503 },
     );
   }

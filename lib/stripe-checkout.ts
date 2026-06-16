@@ -94,9 +94,24 @@ export function toCheckoutCartItem(item: CartItem): CheckoutCartItem {
   };
 }
 
-export function isStripeConfigured() {
-  return Boolean(
-    process.env.STRIPE_SECRET_KEY &&
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+export function getStripePublishableKey() {
+  return (
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ??
+    process.env.STRIPE_PUBLISHABLE_KEY ??
+    ""
   );
+}
+
+export function isStripeConfigured() {
+  return Boolean(process.env.STRIPE_SECRET_KEY && getStripePublishableKey());
+}
+
+export function getStripeConfigError() {
+  const missing: string[] = [];
+  if (!process.env.STRIPE_SECRET_KEY) missing.push("STRIPE_SECRET_KEY");
+  if (!getStripePublishableKey()) {
+    missing.push("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY");
+  }
+  if (missing.length === 0) return null;
+  return `Stripe is not configured. Add ${missing.join(" and ")} to continue.`;
 }
