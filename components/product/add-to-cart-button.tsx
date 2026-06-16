@@ -6,7 +6,6 @@ import { trackAddToCart } from "@/lib/analytics";
 import { getLineTotal } from "@/lib/cart";
 import { toast } from "@/components/shared/toast-provider";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface AddToCartButtonProps {
   product: Product;
@@ -71,12 +70,10 @@ export function AddToCartButton({
   return (
     <Button
       type="button"
+      variant="secondary"
       size={size}
       onClick={handleClick}
-      className={cn(
-        "rounded-none bg-espresso text-bone hover:bg-walnut",
-        className,
-      )}
+      className={className}
     >
       {label}
     </Button>

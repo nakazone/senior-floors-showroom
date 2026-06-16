@@ -214,7 +214,7 @@ export function HeroVideo() {
 
           transition={{ duration: prefersReducedMotion ? 0 : 0.8, delay: prefersReducedMotion ? 0 : 0.2 }}
 
-          className="mb-6 flex items-center gap-3 text-xs font-medium tracking-[0.22em] text-gold-light uppercase"
+          className="mb-6 flex items-center gap-3 text-xs font-semibold tracking-[0.22em] text-secondary uppercase"
 
         >
 
@@ -300,7 +300,7 @@ export function HeroVideo() {
 
 
 
-        <p className="mt-8 text-[11px] tracking-[0.18em] text-bone/45 uppercase">
+        <p className="mt-8 text-[11px] tracking-[0.18em] text-white/45 uppercase">
 
           Now featuring: {activeSlide.label}
 
@@ -336,7 +336,7 @@ export function HeroVideo() {
 
             </p>
 
-            <p className="mt-1 text-[11px] tracking-widest text-bone/50 uppercase">
+            <p className="mt-1 text-[11px] tracking-widest text-white/50 uppercase">
 
               {stat.label}
 
@@ -394,7 +394,7 @@ export function HeroVideo() {
 
         {!prefersReducedMotion ? (
 
-          <div className="flex flex-col items-center gap-2 text-[11px] tracking-[0.14em] text-bone/40 uppercase">
+          <div className="flex flex-col items-center gap-2 text-[11px] tracking-[0.14em] text-white/40 uppercase">
 
             <div className="h-10 w-px animate-pulse bg-gradient-to-b from-transparent to-bone/40" />
 

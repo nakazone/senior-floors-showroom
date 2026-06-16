@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ToastProvider } from "@/components/shared/toast-provider";
+import { brand } from "@/lib/brand";
 import { siteConfig } from "@/lib/siteConfig";
 import "./globals.css";
 
@@ -20,6 +21,10 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
   applicationName: siteConfig.name,
+  icons: {
+    icon: brand.logo.localPath,
+    apple: brand.logo.localPath,
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Senior Floors",
-  studioLabel: "Studio Showroom",
+  studioLabel: "Showroom",
   tagline: "Premium Flooring, Curated for Your Home.",
   description:
     "Shop premium LVP and engineered hardwood flooring online. Visualize, compare, order samples and buy with confidence from Senior Floors.",

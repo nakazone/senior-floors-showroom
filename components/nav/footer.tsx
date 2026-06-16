@@ -14,7 +14,7 @@ export function Footer() {
       <div className="section-inner py-12 md:py-16">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <div className="lg:col-span-1">
-            <BrandLogo variant="footer" showStudioLabel={false} />
+            <BrandLogo variant="footer" showShowroomLabel={false} />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/80">
               Elegant, durable flooring installed with precision and care. Shop premium
               LVP and engineered hardwood online, or visit our main site for installation

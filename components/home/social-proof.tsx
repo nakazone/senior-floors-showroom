@@ -18,8 +18,8 @@ function Stars({ rating }: { rating: number }) {
           key={index}
           className={`h-3.5 w-3.5 ${
             index < rating
-              ? "fill-gold text-gold"
-              : "fill-transparent text-sand"
+              ? "fill-secondary text-secondary"
+              : "fill-transparent text-border"
           }`}
         />
       ))}
@@ -33,7 +33,7 @@ export function SocialProof({
   reviewCount,
 }: SocialProofProps) {
   return (
-    <section className="section-padding bg-cream">
+    <section className="section-padding bg-bg-light">
       <div className="section-inner">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -49,11 +49,9 @@ export function SocialProof({
             </h2>
           </div>
           <div className="text-left md:text-right">
-            <p className="font-serif text-5xl font-light text-espresso">
-              {ratingValue.toFixed(1)}
-            </p>
+            <p className="text-5xl font-bold text-text-dark">{ratingValue.toFixed(1)}</p>
             <Stars rating={Math.round(ratingValue)} />
-            <p className="mt-2 text-sm text-walnut">
+            <p className="mt-2 text-sm text-text-light">
               Based on {reviewCount.toLocaleString()} verified reviews
             </p>
           </div>
@@ -67,18 +65,18 @@ export function SocialProof({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="border border-sand/60 bg-white p-8"
+              className="sf-testimonial-card"
             >
               <Stars rating={review.rating} />
-              <p className="mt-4 text-[15px] leading-relaxed text-walnut">
+              <p className="mt-4 text-[15px] leading-relaxed text-text-light">
                 &ldquo;{review.comment}&rdquo;
               </p>
               <footer className="mt-6 flex items-center justify-between gap-4">
-                <cite className="font-medium text-espresso not-italic">
+                <cite className="font-semibold text-text-dark not-italic">
                   {review.customerName}
                 </cite>
                 {review.verified ? (
-                  <span className="text-[10px] tracking-widest text-sage uppercase">
+                  <span className="text-[10px] font-semibold tracking-[0.14em] text-success uppercase">
                     Verified Purchase
                   </span>
                 ) : null}

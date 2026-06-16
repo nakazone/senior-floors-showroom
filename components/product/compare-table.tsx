@@ -29,7 +29,7 @@ function formatValue(key: keyof CompareItem, value: CompareItem[keyof CompareIte
   }
 
   if (key === "pricePerSqFt" && typeof value === "number") {
-    return <span className="font-serif text-lg">${value.toFixed(2)}</span>;
+    return <span className="text-lg font-bold">${value.toFixed(2)}</span>;
   }
 
   return String(value);
@@ -74,17 +74,12 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
 
   if (items.length === 0) {
     return (
-      <div className="border border-sand bg-bone p-10 text-center">
-        <p className="mb-2 font-serif text-xl text-walnut">
-          No floors selected yet
-        </p>
-        <p className="mb-6 text-sm text-muted-foreground">
+      <div className="rounded-lg border border-border bg-bg-light p-10 text-center shadow-md">
+        <p className="mb-2 text-xl font-bold text-text-dark">No floors selected yet</p>
+        <p className="mb-6 text-sm text-text-muted">
           Add up to 4 products using the Compare button on any floor card.
         </p>
-        <Link
-          href="/shop"
-          className="inline-block bg-espresso px-6 py-3 text-sm font-medium tracking-wide text-bone uppercase no-underline"
-        >
+        <Link href="/shop" className="btn-dark no-underline">
           Browse catalog
         </Link>
       </div>
@@ -93,11 +88,11 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
 
   return (
     <div>
-      <p className="mb-3 text-sm text-walnut md:hidden">
+      <p className="mb-3 text-sm text-text-light md:hidden">
         Swipe horizontally to compare all specifications.
       </p>
       <div
-        className="overflow-x-auto rounded-sm focus-within:ring-2 focus-within:ring-gold"
+        className="overflow-x-auto rounded-lg focus-within:ring-2 focus-within:ring-secondary"
         tabIndex={0}
         role="region"
         aria-label="Product comparison table. Scroll horizontally on smaller screens."
@@ -111,11 +106,11 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
             {items.map((item) => (
               <th
                 key={item.productId}
-                className="min-w-[180px] bg-espresso p-4 text-left align-top font-serif text-[17px] font-light text-bone"
+                className="min-w-[180px] bg-primary p-4 text-left align-top text-[17px] font-bold text-white"
               >
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <div
-                    className="h-20 w-full bg-cream bg-cover bg-center"
+                    className="h-20 w-full bg-bg-light bg-cover bg-center"
                     style={
                       item.imageUrl
                         ? { backgroundImage: `url(${item.imageUrl})` }
@@ -126,7 +121,7 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
                     <button
                       type="button"
                       onClick={() => removeItem(item.productId)}
-                      className="flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center text-bone/70 transition-colors hover:text-bone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                      className="flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center text-white/70 transition-colors duration-300 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                       aria-label={`Remove ${item.name} from compare`}
                     >
                       <X className="h-4 w-4" strokeWidth={1.5} />
@@ -135,7 +130,7 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
                 </div>
                 <Link
                   href={`/product/${item.slug}`}
-                  className="text-bone no-underline hover:text-gold"
+                  className="text-white no-underline transition-colors duration-300 hover:text-secondary"
                 >
                   {item.name}
                 </Link>
@@ -146,13 +141,13 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
         <tbody>
           {rows.map((row) => (
             <tr key={row.key} className="group">
-              <td className="bg-bone p-4 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+              <td className="bg-bg-light p-4 text-xs font-semibold tracking-wider text-text-muted uppercase">
                 {row.label}
               </td>
               {items.map((item) => (
                 <td
                   key={`${item.productId}-${row.key}`}
-                  className="border-b border-cream bg-white p-4 text-espresso transition-colors group-hover:bg-bone"
+                  className="border-b border-border bg-white p-4 text-text-dark transition-colors duration-300 group-hover:bg-bg-light"
                 >
                   {formatValue(row.key, item[row.key])}
                 </td>
@@ -161,13 +156,13 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
           ))}
           {showActions ? (
             <tr>
-              <td className="bg-bone p-4 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+              <td className="bg-bg-light p-4 text-xs font-semibold tracking-wider text-text-muted uppercase">
                 Actions
               </td>
               {items.map((item) => (
                 <td
                   key={`${item.productId}-actions`}
-                  className="border-b border-cream bg-white p-4"
+                  className="border-b border-border bg-white p-4"
                 >
                   <div className="flex flex-col gap-2">
                     <AddToCartButton
@@ -178,7 +173,7 @@ export function CompareTable({ items, showActions = true }: CompareTableProps) {
                     />
                     <Link
                       href={`/product/${item.slug}`}
-                      className="text-center text-xs text-walnut underline"
+                      className="sf-link text-center text-xs"
                     >
                       View details
                     </Link>

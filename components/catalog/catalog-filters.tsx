@@ -45,12 +45,7 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        "cursor-pointer border px-4 py-1.5 text-xs tracking-wide whitespace-nowrap transition-all",
-        active
-          ? "border-espresso bg-espresso text-bone"
-          : "border-sand bg-transparent text-walnut hover:border-espresso hover:text-espresso",
-      )}
+      className={cn("sf-chip text-xs tracking-wide whitespace-nowrap", active && "sf-chip-active")}
     >
       {label}
     </button>

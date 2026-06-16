@@ -18,7 +18,7 @@ function formatLabel(value: string) {
 
 export function InspirationPreview({ items }: InspirationPreviewProps) {
   return (
-    <section className="section-padding bg-bone">
+    <section className="section-padding bg-bg-light">
       <div className="section-inner">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -50,7 +50,7 @@ export function InspirationPreview({ items }: InspirationPreviewProps) {
             >
               <Link
                 href="/inspiration"
-                className="group relative block overflow-hidden bg-espresso no-underline"
+                className="group relative block overflow-hidden rounded-lg bg-primary no-underline shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <div
                   className={`relative w-full ${
@@ -64,16 +64,14 @@ export function InspirationPreview({ items }: InspirationPreviewProps) {
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-espresso/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/85 via-transparent to-transparent" />
                 </div>
                 <div className="absolute right-0 bottom-0 left-0 p-5">
-                  <p className="text-[10px] tracking-[0.14em] text-gold uppercase">
+                  <p className="text-[10px] font-semibold tracking-[0.14em] text-secondary uppercase">
                     {formatLabel(item.roomType)} | {formatLabel(item.style)}
                   </p>
                   {item.productName ? (
-                    <p className="mt-1 font-serif text-lg text-bone">
-                      {item.productName}
-                    </p>
+                    <p className="mt-1 text-lg font-bold text-white">{item.productName}</p>
                   ) : null}
                 </div>
               </Link>

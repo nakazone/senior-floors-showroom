@@ -67,10 +67,8 @@ export function HomeCatalogPreview({ products }: HomeCatalogPreviewProps) {
                   type="button"
                   onClick={() => setActiveFilter(chip.id)}
                   className={cn(
-                    "cursor-pointer rounded-md border px-4 py-2 text-sm font-medium transition-colors",
-                    activeFilter === chip.id
-                      ? "border-primary bg-primary text-white"
-                      : "border-border bg-bg-light text-text-light hover:border-primary hover:text-primary",
+                    "sf-chip",
+                    activeFilter === chip.id && "sf-chip-active",
                   )}
                 >
                   {chip.label}

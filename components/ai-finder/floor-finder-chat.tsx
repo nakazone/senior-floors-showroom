@@ -93,11 +93,9 @@ export function FloorFinderChat() {
   }
 
   return (
-    <div className="bg-espresso p-8 md:p-12">
-      <p className="mb-2 font-serif text-[28px] font-light text-bone">
-        Floor Finder Quiz
-      </p>
-      <p className="mb-8 text-sm text-bone/55">
+    <div className="rounded-lg bg-primary p-8 shadow-lg md:p-12">
+      <p className="mb-2 text-[28px] font-bold text-white">Floor Finder Quiz</p>
+      <p className="mb-8 text-sm text-white/60">
         Answer 5 quick questions to get your perfect match.
       </p>
 
@@ -106,8 +104,8 @@ export function FloorFinderChat() {
           <span
             key={question.id}
             className={cn(
-              "h-2 w-2 rounded-full transition-colors",
-              index <= step || isComplete ? "bg-gold" : "bg-bone/20",
+              "h-2 w-2 rounded-full transition-colors duration-300",
+              index <= step || isComplete ? "bg-secondary" : "bg-white/20",
             )}
           />
         ))}
@@ -115,14 +113,14 @@ export function FloorFinderChat() {
 
       {!isComplete && currentQuestion ? (
         <div>
-          <p className="mb-4 text-sm text-bone/80">{currentQuestion.question}</p>
+          <p className="mb-4 text-sm text-white/85">{currentQuestion.question}</p>
           <div className="flex flex-wrap gap-2">
             {currentQuestion.options.map((option) => (
               <button
                 key={option.value}
                 type="button"
                 onClick={() => handleAnswer(option.value)}
-                className="cursor-pointer border border-bone/15 bg-bone/7 px-4 py-2 text-sm text-bone/70 transition-colors hover:bg-bone/14 hover:text-bone"
+                className="cursor-pointer rounded-md border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/75 transition-all duration-300 hover:-translate-y-0.5 hover:border-secondary hover:bg-white/10 hover:text-white"
               >
                 {option.label}
               </button>
@@ -135,16 +133,16 @@ export function FloorFinderChat() {
         <div>
           {isLoading ? (
             <div className="space-y-3 py-6">
-              <div className="h-4 w-2/3 animate-pulse bg-bone/10" />
-              <div className="h-4 w-full animate-pulse bg-bone/10" />
-              <div className="h-4 w-5/6 animate-pulse bg-bone/10" />
+              <div className="h-4 w-2/3 animate-pulse bg-white/10" />
+              <div className="h-4 w-full animate-pulse bg-white/10" />
+              <div className="h-4 w-5/6 animate-pulse bg-white/10" />
             </div>
           ) : result ? (
             <>
-              <p className="mb-4 font-serif text-xl font-light text-bone">
+              <p className="mb-4 text-xl font-bold text-white">
                 Based on your answers, we recommend:
               </p>
-              <p className="mb-6 text-sm leading-relaxed text-bone/70">
+              <p className="mb-6 text-sm leading-relaxed text-white/70">
                 {result.reasoning}
               </p>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -153,17 +151,14 @@ export function FloorFinderChat() {
                 ))}
               </div>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href={shopHref}
-                  className="inline-flex flex-1 items-center justify-center bg-bone px-4 py-3 text-sm font-medium tracking-wide text-espresso uppercase no-underline"
-                >
+                <Link href={shopHref} className="btn-gold flex-1 no-underline">
                   Browse matching floors
                 </Link>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleRestart}
-                  className="flex-1 rounded-none border-bone/30 bg-transparent text-bone hover:bg-bone/10 hover:text-bone"
+                  className="flex-1 border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
                 >
                   Start over
                 </Button>
