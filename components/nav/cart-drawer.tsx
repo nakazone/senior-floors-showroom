@@ -21,7 +21,7 @@ export function CartDrawer() {
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
       <SheetTrigger
-        className="relative flex min-h-11 min-w-11 items-center justify-center text-walnut transition-colors hover:text-espresso focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bone"
+        className="relative flex min-h-11 min-w-11 items-center justify-center text-white/85 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
         aria-label="Open cart"
       >
         <ShoppingBag className="h-[19px] w-[19px]" strokeWidth={1.5} />
@@ -32,7 +32,7 @@ export function CartDrawer() {
         className="flex w-full flex-col bg-white p-0 sm:max-w-[420px]"
       >
         <SheetHeader className="flex-row items-center justify-between border-b border-cream px-8 py-6">
-          <SheetTitle className="font-serif text-[22px] font-normal text-espresso">
+          <SheetTitle className="text-[22px] font-bold text-text-dark">
             Your Cart
           </SheetTitle>
         </SheetHeader>

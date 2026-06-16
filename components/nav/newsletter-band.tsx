@@ -28,19 +28,17 @@ export function NewsletterBand() {
   }
 
   return (
-    <section className="bg-espresso px-6 py-20 text-center md:px-16">
+    <section className="bg-primary px-4 py-16 text-center sm:px-6 md:px-8 md:py-20">
       <div className="mx-auto max-w-2xl">
-        <h2 className="mb-2 font-serif text-4xl font-light text-bone md:text-[44px]">
-          Stay <em className="text-gold not-italic">inspired</em>
+        <h2 className="display-heading mb-2 text-white">
+          Stay <em>inspired</em>
         </h2>
-        <p className="mb-8 text-[15px] text-bone/50">
-          New arrivals, exclusive deals and design ideas - delivered monthly.
+        <p className="mb-8 text-[15px] text-white/75">
+          New arrivals, exclusive deals and design ideas from {siteConfig.name}.
         </p>
 
         {status === "success" ? (
-          <p className="text-sm text-gold-light">
-            Subscribed! Welcome to {siteConfig.name}.
-          </p>
+          <p className="text-sm text-secondary">Subscribed! Welcome to {siteConfig.name}.</p>
         ) : (
           <form
             onSubmit={handleSubmit}
@@ -57,7 +55,7 @@ export function NewsletterBand() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
               autoComplete="email"
-              className="flex-1 border border-bone/15 bg-bone/8 px-5 py-3.5 text-sm text-bone outline-none placeholder:text-bone/35 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/40"
+              className="flex-1 rounded-md border border-white/15 bg-white/10 px-5 py-3.5 text-sm text-white outline-none placeholder:text-white/45 focus-visible:border-secondary focus-visible:ring-2 focus-visible:ring-secondary/40"
             />
             <button
               type="submit"

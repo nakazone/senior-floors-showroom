@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 function MegaColumn({ column }: { column: NavColumn }) {
   return (
     <div>
-      <p className="mb-4 text-[11px] font-semibold tracking-[0.14em] text-gold uppercase">
+      <p className="mb-4 text-[11px] font-semibold tracking-[0.14em] text-secondary uppercase">
         {column.title}
       </p>
       <ul className="flex flex-col gap-2">
@@ -25,11 +25,11 @@ function MegaColumn({ column }: { column: NavColumn }) {
               render={
                 <Link
                   href={link.href}
-                  className="flex items-center gap-1.5 text-sm text-walnut no-underline transition-colors hover:bg-transparent hover:text-espresso"
+                  className="flex items-center gap-1.5 text-sm text-text-light no-underline transition-colors hover:bg-transparent hover:text-primary"
                 />
               }
             >
-              <span className="h-px w-3 shrink-0 bg-sand" aria-hidden="true" />
+              <span className="h-px w-3 shrink-0 bg-border" aria-hidden="true" />
               {link.label}
             </NavigationMenuLink>
           </li>
@@ -47,7 +47,7 @@ function DesktopNavLink({ href, children }: { href: string; children: React.Reac
           <Link
             href={href}
             className={cn(
-              "inline-flex h-[var(--nav-height)] items-center px-5 text-[13px] tracking-[0.04em] text-walnut no-underline transition-colors hover:bg-transparent hover:text-espresso",
+              "nav-link inline-flex h-[var(--nav-height)] items-center px-4 no-underline",
             )}
           />
         }
@@ -65,13 +65,13 @@ export function MegaMenu() {
         <NavigationMenuItem>
           <NavigationMenuTrigger
             className={cn(
-              "h-[var(--nav-height)] rounded-none bg-transparent px-5 text-[13px] tracking-[0.04em] text-walnut shadow-none hover:bg-transparent hover:text-espresso data-popup-open:bg-transparent data-popup-open:text-espresso",
+              "nav-link h-[var(--nav-height)] rounded-none bg-transparent px-4 text-sm shadow-none hover:bg-transparent data-popup-open:bg-transparent",
             )}
           >
             Shop
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="grid w-[min(920px,calc(100vw-3rem))] grid-cols-4 gap-8 border border-sand border-t-0 bg-white p-10 shadow-[0_24px_60px_rgba(30,20,12,0.1)]">
+            <div className="grid w-[min(920px,calc(100vw-3rem))] grid-cols-4 gap-8 rounded-lg border border-gray-100 border-t-2 border-t-secondary bg-white p-10 shadow-xl shadow-primary/20">
               {shopMegaMenu.map((column) => (
                 <MegaColumn key={column.title} column={column} />
               ))}

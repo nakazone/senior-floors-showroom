@@ -4,42 +4,52 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Senior Floors Studio — Design Tokens */
+/* Senior Floors brand — aligned with site + landing */
 :root {
-  --bone: #f8f5f0;
-  --cream: #f0ebe3;
-  --sand: #d9ccba;
-  --walnut: #5c4a32;
-  --espresso: #1e140c;
-  --gold: #a68b5b;
-  --gold-light: #c4a87a;
-  --sage: #7b9e87;
-  --stripe-purple: #635bff;
-  --text: #1a1410;
-  --muted: #9b8b78;
-  --nav-height: 72px;
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --primary: #1a2036;
+  --primary-hover: #252b47;
+  --primary-dark: #14192b;
+  --secondary: #d6b598;
+  --secondary-hover: #e0c4a8;
+  --text-dark: #1a2036;
+  --text-light: #4a5568;
+  --text-muted: #718096;
+  --bg-light: #f7f8fc;
+  --bg-white: #ffffff;
+  --border-color: #e2e8f0;
 
-  /* shadcn semantic tokens mapped to brand */
-  --background: var(--bone);
-  --foreground: var(--espresso);
-  --card: #ffffff;
-  --card-foreground: var(--espresso);
-  --popover: #ffffff;
-  --popover-foreground: var(--espresso);
-  --primary: var(--espresso);
-  --primary-foreground: var(--bone);
-  --secondary: var(--cream);
-  --secondary-foreground: var(--espresso);
-  --muted: var(--cream);
-  --muted-foreground: var(--walnut);
-  --accent: var(--cream);
-  --accent-foreground: var(--espresso);
+  /* Legacy token aliases used across showroom components */
+  --bone: var(--bg-white);
+  --cream: var(--bg-light);
+  --sand: var(--border-color);
+  --walnut: var(--text-light);
+  --espresso: var(--primary);
+  --gold: var(--secondary);
+  --gold-light: var(--secondary-hover);
+  --sage: #48bb78;
+  --stripe-purple: #635bff;
+  --text: var(--text-dark);
+  --muted-raw: var(--text-muted);
+  --nav-height: 80px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 6px;
+
+  --background: var(--bg-white);
+  --foreground: var(--text-dark);
+  --card: var(--bg-white);
+  --card-foreground: var(--text-dark);
+  --popover: var(--bg-white);
+  --popover-foreground: var(--text-dark);
+  --primary-foreground: #ffffff;
+  --secondary-foreground: var(--text-dark);
+  --muted: var(--bg-light);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--bg-light);
+  --accent-foreground: var(--text-dark);
   --destructive: #c15a3a;
-  --border: var(--sand);
-  --input: var(--sand);
-  --ring: var(--gold);
-  --radius: 0px;
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--secondary);
 }
 
 @theme inline {
@@ -54,14 +64,21 @@
   --color-gold-light: var(--gold-light);
   --color-sage: var(--sage);
   --color-stripe-purple: var(--stripe-purple);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-text-dark: var(--text-dark);
+  --color-text-light: var(--text-light);
+  --color-text-muted: var(--text-muted);
+  --color-bg-light: var(--bg-light);
   --color-muted-foreground: var(--muted-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
@@ -70,12 +87,12 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --font-sans: var(--font-dm-sans);
-  --font-serif: var(--font-cormorant);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-inter);
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.25);
+  --radius-xl: calc(var(--radius) * 1.5);
 }
 
 @layer base {
@@ -95,9 +112,10 @@
   }
 
   body {
-    @apply bg-bone text-foreground antialiased;
+    @apply bg-white text-foreground antialiased;
     font-size: 16px;
     line-height: 1.6;
+    color: var(--text-light);
   }
 
   h1,
@@ -106,16 +124,16 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-serif);
-    font-weight: 300;
-    color: var(--espresso);
-    line-height: 1.1;
+    font-family: var(--font-inter);
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
   }
 }
 
 @layer utilities {
   .section-inner {
-    @apply mx-auto max-w-[1320px] px-6 md:px-16;
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
   .section-padding {
@@ -123,32 +141,54 @@
   }
 
   .eyebrow {
-    @apply mb-3.5 block text-[11px] font-medium tracking-[0.18em] text-gold uppercase;
+    @apply mb-3 block text-xs font-semibold tracking-[0.14em] text-secondary uppercase;
   }
 
   .display-heading {
-    font-family: var(--font-serif);
-    @apply text-4xl font-light text-espresso md:text-5xl lg:text-[54px];
+    @apply text-3xl font-bold text-text-dark sm:text-4xl lg:text-5xl;
   }
 
   .display-heading em {
-    @apply text-gold not-italic;
+    @apply text-secondary not-italic;
   }
 
-  .btn-dark {
-    @apply inline-block cursor-pointer border-none bg-espresso px-8 py-3.5 text-[13px] font-medium tracking-wider text-bone uppercase transition-colors hover:bg-walnut focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bone;
+  .btn-dark,
+  .cta-button {
+    @apply inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold text-white no-underline transition-all duration-200;
+    @apply bg-primary hover:bg-primary-hover active:bg-primary-dark;
+    @apply shadow-md hover:-translate-y-0.5 hover:shadow-lg;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
   .btn-outline {
-    @apply inline-block cursor-pointer border-[1.5px] border-espresso bg-transparent px-8 py-3.5 text-[13px] font-medium tracking-wider text-espresso uppercase transition-all hover:bg-espresso hover:text-bone focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bone;
+    @apply inline-flex items-center justify-center rounded-md border border-primary bg-transparent px-6 py-3 text-base font-semibold text-primary no-underline transition-all duration-200;
+    @apply hover:bg-primary hover:text-white;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
-  .btn-gold {
-    @apply inline-block cursor-pointer border-none bg-gold px-8 py-3.5 text-[13px] font-semibold tracking-wider text-espresso uppercase transition-colors hover:bg-gold-light focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-espresso focus-visible:ring-offset-2 focus-visible:ring-offset-bone;
+  .btn-gold,
+  .cta-button-secondary {
+    @apply inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold text-text-dark no-underline transition-all duration-200;
+    @apply bg-secondary hover:bg-secondary-hover;
+    @apply shadow-md hover:-translate-y-0.5 hover:shadow-lg;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2;
+  }
+
+  .nav-link {
+    @apply relative text-sm font-medium text-white/90 transition-colors hover:text-white;
+  }
+
+  .nav-link::after {
+    content: "";
+    @apply absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-secondary transition-all duration-200;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
   }
 
   .skip-link {
-    @apply fixed top-4 left-4 z-[100] -translate-y-24 bg-espresso px-4 py-2 text-sm font-medium text-bone no-underline transition-transform focus:translate-y-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-gold;
+    @apply fixed top-4 left-4 z-[100] -translate-y-24 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white no-underline transition-transform focus:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary;
   }
 
   .touch-target {
@@ -156,7 +196,7 @@
   }
 
   .scroll-hint-shadow {
-    background: linear-gradient(to right, transparent, rgb(248 245 240 / 0.95));
+    background: linear-gradient(to right, transparent, rgb(255 255 255 / 0.95));
   }
 
   @media (prefers-reduced-motion: reduce) {

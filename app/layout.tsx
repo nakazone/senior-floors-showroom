@@ -1,27 +1,20 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ToastProvider } from "@/components/shared/toast-provider";
 import { siteConfig } from "@/lib/siteConfig";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
+    default: `${siteConfig.name} ${siteConfig.studioLabel}`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -59,7 +52,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cormorant.variable} ${dmSans.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`}>
         <AnalyticsProvider />
         <ToastProvider>
           {children}
