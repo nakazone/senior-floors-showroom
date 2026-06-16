@@ -6,7 +6,7 @@ import type { Product } from "@/types";
 import { useSampleStore } from "@/lib/stores/sample-store";
 import { SampleBoxSelector } from "@/components/samples/sample-box-selector";
 import { SamplePicker } from "@/components/samples/sample-picker";
-import { SampleOrderForm } from "@/components/samples/sample-order-form";
+import { SampleShippingDialog } from "@/components/samples/sample-shipping-dialog";
 import { sampleProgramPerks } from "@/lib/home-sections";
 
 interface SamplesPageViewProps {
@@ -43,8 +43,8 @@ export function SamplesPageView({
   }, [initialSlug, products, toggleItem]);
 
   return (
-    <div className="grid gap-12 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:items-start">
-      <div className="space-y-8">
+    <div className="grid gap-10 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:items-start">
+      <aside className="space-y-6 xl:sticky xl:top-[calc(var(--nav-height)+2rem)] xl:self-start">
         <div className="overflow-hidden rounded-lg border border-border bg-bg-light shadow-md">
           <div className="relative aspect-[4/3] w-full">
             <Image
@@ -53,7 +53,7 @@ export function SamplesPageView({
               fill
               priority
               className="object-cover"
-              sizes="(max-width: 1280px) 100vw, 45vw"
+              sizes="(max-width: 1280px) 100vw, 40vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent" />
             <div className="absolute right-0 bottom-0 left-0 p-6 text-white">
@@ -78,22 +78,17 @@ export function SamplesPageView({
             ))}
           </ul>
         </div>
+      </aside>
+
+      <div className="min-w-0 xl:col-start-2 xl:row-span-2">
+        <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
+          Choose your swatches
+        </p>
+        <SamplePicker products={products} />
       </div>
 
-      <div className="space-y-8">
-        <div>
-          <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
-            Choose your swatches
-          </p>
-          <SamplePicker products={products} />
-        </div>
-
-        <div className="rounded-lg border border-border bg-bg-light p-6">
-          <p className="mb-5 text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
-            Shipping details
-          </p>
-          <SampleOrderForm />
-        </div>
+      <div className="xl:col-start-1 xl:row-start-2">
+        <SampleShippingDialog />
       </div>
     </div>
   );

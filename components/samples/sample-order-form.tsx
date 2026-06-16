@@ -3,10 +3,7 @@
 import { useState, useTransition } from "react";
 import { requestSamples } from "@/app/actions/samples";
 import { trackGenerateLead } from "@/lib/analytics";
-import {
-  calculateSampleTotal,
-  getSampleBoxPrice,
-} from "@/lib/samples";
+import { calculateSampleTotal } from "@/lib/samples";
 import { useSampleStore } from "@/lib/stores/sample-store";
 import { useCartStore } from "@/lib/stores/cart-store";
 import { toast } from "@/components/shared/toast-provider";
@@ -15,10 +12,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { formatCartCurrency } from "@/lib/cart";
 
-export function SampleOrderForm() {
+interface SampleOrderFormProps {
+  onSuccess?: () => void;
+}
+
+export function SampleOrderForm({ onSuccess }: SampleOrderFormProps) {
   const items = useSampleStore((state) => state.items);
   const boxSize = useSampleStore((state) => state.boxSize);
-  const maxSamples = useSampleStore((state) => state.maxSamples());
   const clearAll = useSampleStore((state) => state.clearAll);
   const cartItems = useCartStore((state) => state.items);
   const [isPending, startTransition] = useTransition();
@@ -35,7 +35,6 @@ export function SampleOrderForm() {
   const freeWithOrder = cartItems.length > 0;
   const total = calculateSampleTotal(items.length, { freeWithOrder, boxSize });
   const isFree = total <= 0;
-  const boxPrice = getSampleBoxPrice(boxSize);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -70,6 +69,7 @@ export function SampleOrderForm() {
           description: "Delivery in 2-4 business days.",
         });
         clearAll();
+        onSuccess?.();
         return;
       }
 
@@ -113,30 +113,6 @@ export function SampleOrderForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="rounded-lg border border-border bg-white p-4">
-        <p className="text-lg font-bold text-text-dark">
-          {boxSize}-sample box:{" "}
-          <span className="text-secondary">
-            {items.length} / {maxSamples}
-          </span>{" "}
-          selected
-        </p>
-        <p className="mt-2 text-sm text-text-light">
-          {isFree
-            ? "Free shipping. Delivered in 2-4 business days."
-            : `${formatCartCurrency(total)} for your ${boxSize}-sample box.`}
-        </p>
-        {freeWithOrder ? (
-          <p className="mt-1 text-xs text-success">
-            Samples are free with items in your cart.
-          </p>
-        ) : !isFree ? (
-          <p className="mt-1 text-xs text-text-muted">
-            {formatCartCurrency(boxPrice)} per box, or free when you have flooring in your cart.
-          </p>
-        ) : null}
-      </div>
-
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <Label htmlFor="sample-name">Full name</Label>
