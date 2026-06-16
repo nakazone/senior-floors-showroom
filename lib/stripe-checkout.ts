@@ -20,6 +20,56 @@ export const checkoutRequestSchema = z.object({
 
 export type CheckoutCartItem = z.infer<typeof checkoutCartItemSchema>;
 
+/** Demo product used for $1 Stripe checkout tests — qualifies for free shipping. */
+export const FREE_SHIPPING_PRODUCT_SLUG = "demo-one-dollar-checkout";
+
+export function qualifiesForFreeShipping(items: CheckoutCartItem[]) {
+  return (
+    items.length > 0 &&
+    items.every((item) => item.slug === FREE_SHIPPING_PRODUCT_SLUG)
+  );
+}
+
+export function buildShippingOptions(
+  items: CheckoutCartItem[],
+): Stripe.Checkout.SessionCreateParams.ShippingOption[] {
+  if (qualifiesForFreeShipping(items)) {
+    return [
+      {
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: {
+            amount: 0,
+            currency: "usd",
+          },
+          display_name: "Free test delivery",
+          delivery_estimate: {
+            minimum: { unit: "business_day", value: 1 },
+            maximum: { unit: "business_day", value: 3 },
+          },
+        },
+      },
+    ];
+  }
+
+  return [
+    {
+      shipping_rate_data: {
+        type: "fixed_amount",
+        fixed_amount: {
+          amount: 14900,
+          currency: "usd",
+        },
+        display_name: "Freight delivery",
+        delivery_estimate: {
+          minimum: { unit: "business_day", value: 5 },
+          maximum: { unit: "business_day", value: 10 },
+        },
+      },
+    },
+  ];
+}
+
 export type StripeCartMetaItem = {
   p: string;
   s: number;

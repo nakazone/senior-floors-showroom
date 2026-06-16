@@ -5,6 +5,7 @@ import { getStripe } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
 import {
   buildCheckoutLineItems,
+  buildShippingOptions,
   checkoutRequestSchema,
   getStripeConfigError,
   isStripeConfigured,
@@ -160,22 +161,7 @@ export async function POST(request: Request) {
       shipping_address_collection: {
         allowed_countries: ["US"],
       },
-      shipping_options: [
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: {
-              amount: 14900,
-              currency: "usd",
-            },
-            display_name: "Freight delivery",
-            delivery_estimate: {
-              minimum: { unit: "business_day", value: 5 },
-              maximum: { unit: "business_day", value: 10 },
-            },
-          },
-        },
-      ],
+      shipping_options: buildShippingOptions(checkoutItems),
       metadata: {
         checkoutType: "order",
         cartPayload: serializeCartMetadata(checkoutItems),
